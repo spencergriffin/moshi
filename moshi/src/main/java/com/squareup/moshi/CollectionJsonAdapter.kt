@@ -15,9 +15,9 @@
  */
 package com.squareup.moshi
 
-import kotlin.Throws
-import java.lang.reflect.Type
 import okio.IOException
+import java.lang.reflect.Type
+import kotlin.Throws
 
 /** Converts collection types to JSON arrays containing their converted contents.  */
 internal abstract class CollectionJsonAdapter<C : MutableCollection<T?>, T> private constructor(
