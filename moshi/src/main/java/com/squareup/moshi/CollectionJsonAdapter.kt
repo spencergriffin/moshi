@@ -15,9 +15,7 @@
  */
 package com.squareup.moshi
 
-import okio.IOException
 import java.lang.reflect.Type
-import kotlin.Throws
 
 /** Converts collection types to JSON arrays containing their converted contents.  */
 internal abstract class CollectionJsonAdapter<C : MutableCollection<T?>, T> private constructor(
@@ -25,7 +23,6 @@ internal abstract class CollectionJsonAdapter<C : MutableCollection<T?>, T> priv
 ) : JsonAdapter<C>() {
   abstract fun newCollection(): C
 
-  @Throws(IOException::class)
   override fun fromJson(reader: JsonReader): C {
     val result = newCollection()
     reader.beginArray()
@@ -36,7 +33,6 @@ internal abstract class CollectionJsonAdapter<C : MutableCollection<T?>, T> priv
     return result
   }
 
-  @Throws(IOException::class)
   override fun toJson(writer: JsonWriter, value: C?) {
     value?.let {
       writer.beginArray()
@@ -55,7 +51,7 @@ internal abstract class CollectionJsonAdapter<C : MutableCollection<T?>, T> priv
     @JvmField
     val FACTORY = object : Factory {
       override fun create(type: Type, annotations: Set<Annotation>, moshi: Moshi): JsonAdapter<*>? {
-        val rawType = Types.getRawType(type)
+        val rawType = type.rawType
         if (annotations.isNotEmpty()) return null
         if (rawType == MutableList::class.java || rawType == MutableCollection::class.java) {
           return newArrayListAdapter<Any>(type, moshi).nullSafe()
